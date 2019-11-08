@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<ul class="layui-nav layui-nav-tree layui-inline" lay-filter="user" th:fragment="nav">
+    <li th:classappend="${page=='home'}? 'layui-nav-item layui-this': 'layui-nav-item'">
+        <a th:href="@{/user/{uid}(uid=${user.userid})}">
+            <i class="layui-icon">&#xe609;</i>
+            我的主页
+        </a>
+    </li>
+     <li th:classappend="${page=='index'}? 'layui-nav-item layui-this': 'layui-nav-item'">
+        <a href="/user/index">
+            <i class="layui-icon">&#xe612;</i>
+            用户中心
+        </a>
+    </li>
+    <li th:classappend="${page=='set'}? 'layui-nav-item layui-this': 'layui-nav-item'">
+        <a href="/user/set">
+            <i class="layui-icon">&#xe620;</i>
+            基本设置
+        </a>
+    </li>
+    <li th:classappend="${page=='message'}? 'layui-nav-item layui-this': 'layui-nav-item'">
+        <a href="/user/message">
+            <i class="layui-icon">&#xe611;</i>
+            我的消息
+        </a>
+    </li>
+</ul>
+</body>
+</html>

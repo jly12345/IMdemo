@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.demo.tio.study.mapper.UserMapper">
+
+    <!-- 嵌套结果集的方式，使用collection标签定义关联的集合类型的属性封装规则 -->
+    <resultMap type="com.demo.tio.study.result.BaseDataViewModel" id="BaseDataViewModel">
+        <id column="uid" property="id"/>
+        <collection property="mine" ofType="com.demo.tio.study.result.UserViewModel">
+            <id column="uid" property="id"/>
+            <result column="avatar" property="avatar"/>
+            <result column="sign" property="sign"/>
+            <result column="user_name" property="username"/>
+        </collection>
+
+        <collection property="friend" ofType="com.demo.tio.study.result.FriendGroupViewModel">
+            <!-- 定义这个集合中元素的封装规则 -->
+            <id column="gid" property="id"/>
+            <result column="name" property="groupname"/>
+            <collection property="list" ofType="com.demo.tio.study.result.UserViewModel">
+                <id column="fid" property="id"/>
+                <result column="favatar" property="avatar"/>
+                <result column="fsign" property="sign"/>
+                <result column="fuser_name" property="username"/>
+            </collection>
+        </collection>
+
+        <collection property="group" ofType="com.demo.tio.study.result.BigGroupViewModel">
+            <id column="bgid" property="id"/>
+            <result column="group_name" property="groupname"/>
+            <result column="bgavatar" property="avatar"/>
+        </collection>
+    </resultMap>
+
+    <select id="selectList" resultMap="BaseDataViewModel" parameterType="long">
+            SELECT
+                a.id AS uid,
+                a.avatar,
+                a.sign,
+                a.user_name,
+                b.id AS gid,
+                b.`name`,
+                d.id AS fid,
+                d.avatar AS favatar,
+                d.sign AS fsign,
+                d.user_name AS fuser_name,
+                f.id as bgid,
+                f.group_name,
+                f.avatar as bgavatar
+            FROM
+                `user` a
+                INNER JOIN friend_group b ON a.id = b.uid
+                INNER JOIN user_friend_group c ON b.id = c.group_id
+                INNER JOIN `user` d ON c.uid = d.id
+                inner join user_big_group e on e.uid=a.id
+                inner join big_group f  on e.group_id=f.id
+            where a.id=${id}
+    </select>
+
+</mapper>
